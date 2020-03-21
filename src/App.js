@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Checkbox from "./Checkbox";
 import MapWithAMarker from "./MapWithAMarker";
 import Grid from "@material-ui/core/Grid";
+import axios from 'axios';
+
 
 const items = ["Milk", "Bread", "Water"];
 
@@ -11,11 +13,14 @@ export class App extends React.Component {
     this.state = {
       currentLatLng: {
         lat: 0,
-        lng: 0
+        lng: 0,
       },
-      isMarkerShown: false
+      isMarkerShown: false,
+      shops: [],
     };
+  
   }
+
 
   showCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -33,13 +38,26 @@ export class App extends React.Component {
     }
   };
 
-  componentWillMount = () => {
+componentWillMount = () => {
     this.selectedCheckboxes = new Set();
+    this.getDataAxios();
   };
 
   componentDidMount() {
     this.showCurrentLocation();
   }
+
+
+  async getDataAxios(){
+    const response =
+      await axios.get("http://localhost:8010/api/v1/shops/");
+    this.state.shops = response.data;
+
+    this.state.shops.shops.map(shop => (
+        console.log(shop.loc.lat)
+    ))
+}
+
 
   toggleCheckbox = label => {
     if (this.selectedCheckboxes.has(label)) {
@@ -75,6 +93,7 @@ export class App extends React.Component {
             <MapWithAMarker
               isMarkerShown={this.state.isMarkerShown}
               currentLocation={this.state.currentLatLng}
+              shops={this.state.shops}
             />
           </Grid>
           <Grid item xs={4}>
@@ -83,31 +102,26 @@ export class App extends React.Component {
                 <div className="col-sm-12">
                   <div>
                     <h1>Wishlist</h1>
-                  
 
-                  <form onSubmit={this.handleFormSubmit}>
-                    {this.createCheckboxes()}
+                    <form onSubmit={this.handleFormSubmit}>
+                      {this.createCheckboxes()}
 
-                    <button className="btn btn-default" type="submit">
-                      Save
-                    </button>
-                  </form>
-
+                      <button className="btn btn-default" type="submit">
+                        Save
+                      </button>
+                    </form>
                   </div>
 
-                  <div style={{paddingTop:"50%"}}>
+                  <div style={{ paddingTop: "50%" }}>
                     <h1>Search</h1>
-                  
-                  <form onSubmit={this.handleFormSubmit} >
-                    {this.createCheckboxes()}
 
-                    <button className="btn btn-default" type="submit">
-                      Search
-                    </button>
-                  </form>
-
+                    <form onSubmit={this.handleFormSubmit}>
+                      {this.createCheckboxes()}
+                      <button className="btn btn-default" type="submit">
+                        Search
+                      </button>
+                    </form>
                   </div>
-
                 </div>
               </div>
             </div>
