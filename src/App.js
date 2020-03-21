@@ -17,7 +17,7 @@ export class App extends React.Component {
         lng: 0
       },
       isMarkerShown: false,
-      shops: [],
+      shops: []
     };
   }
 
@@ -47,7 +47,9 @@ export class App extends React.Component {
   }
 
   async getDataAxios() {
-    const response = await axios.get("http://ec2-18-130-190-158.eu-west-2.compute.amazonaws.com:8010/api/v1/shops/");
+    const response = await axios.get(
+      "http://ec2-18-130-190-158.eu-west-2.compute.amazonaws.com:8010/api/v1/shops/"
+    );
     this.setState({ shops: response.data });
   }
 
@@ -118,8 +120,45 @@ export class App extends React.Component {
               </div>
             </div>
           </Grid>
-
-
+          <Grid item xs={4}>
+            <div>
+              <b>
+                {this.state.shops.shops != null
+                  ? this.state.shops.shops.map(shop => (
+                      <React.Fragment>
+                        <ul className="list-group">
+                          <li className="list-group-item list-group-item-primary">
+                            <Grid item>
+                              <ButtonBase >
+                                <img
+                                  alt="complex"
+                                  src={shop.photo}
+                                />
+                              </ButtonBase>
+                            </Grid>
+                            <Grid item xs>
+                              <Typography gutterBottom variant="subtitle1">
+                                {shop.name}
+                              </Typography>
+                              <Typography variant="body2" gutterBottom>
+                                {shop.address}
+                              </Typography>
+                              <Typography variant="body2" >
+                                Dabar:{" "}
+                                <b>
+                                  {shop.open_now ? "Atidaryta" : "Uzdaryta"}
+                                </b>{" "}
+                                .
+                              </Typography>
+                            </Grid>
+                          </li>
+                        </ul>
+                      </React.Fragment>
+                    ))
+                  : `${console.log("ayaya")}`}
+              </b>
+            </div>
+          </Grid>
         </Grid>
       </div>
     );

@@ -28,7 +28,7 @@ const MapWithAMarker = compose(
       <Marker
         position={{
           lat: shop.loc.lat,
-          lng: shop.loc.long
+          lng: shop.loc.lng
         }}
       />
     ))}
