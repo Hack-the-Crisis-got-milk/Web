@@ -50,7 +50,7 @@ export class App extends React.Component {
 
   async getDataAxios() {
     const response = await axios.get(
-      "http://ec2-18-130-190-158.eu-west-2.compute.amazonaws.com:8010/api/v1/shops/"
+      "http://ec2-18-130-190-158.eu-west-2.compute.amazonaws.com:8010/api/v1/shops"
     );
     this.setState({ shops: response.data });
   }
@@ -93,9 +93,9 @@ export class App extends React.Component {
 
   render() {
     return (
-      <div>
-        <Grid container spacing={10} style={{ width: "100vw", height: "50vw" }}>
-          <Grid item xs={4}>
+      <div style={{ maxWidth: "100vw", maxHeight: "100vw" }}>
+        <Grid container spacing={3} style={{ width: "100vw", height: "50vw" }}>
+          <Grid item xs={6}>
             <MapWithAMarker
               isMarkerShown={this.state.isMarkerShown}
               currentLocation={this.state.currentLatLng}
@@ -132,7 +132,7 @@ export class App extends React.Component {
               </div>
             </div>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <div>
               <b>
                 {this.state.shops.shops != null
@@ -156,9 +156,9 @@ export class App extends React.Component {
                                 {shop.address}
                               </Typography>
                               <Typography variant="body2" >
-                                Dabar:{" "}
+                                Currently:{" "}
                                 <b>
-                                  {shop.open_now ? "Atidaryta" : "Uzdaryta"}
+                                  {shop.open_now ? "Open" : "Closed"}
                                 </b>{" "}
                                 .
                               </Typography>
