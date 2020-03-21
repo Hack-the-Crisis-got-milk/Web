@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import Checkbox from "./Checkbox";
 import MapWithAMarker from "./MapWithAMarker";
 import Grid from "@material-ui/core/Grid";
-import axios from 'axios';
-
+import axios from "axios";
+import Typography from "@material-ui/core/Typography";
+import ButtonBase from "@material-ui/core/ButtonBase";
 
 const items = ["Milk", "Bread", "Water"];
 
@@ -13,14 +14,12 @@ export class App extends React.Component {
     this.state = {
       currentLatLng: {
         lat: 0,
-        lng: 0,
+        lng: 0
       },
       isMarkerShown: false,
       shops: [],
     };
-  
   }
-
 
   showCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -38,26 +37,19 @@ export class App extends React.Component {
     }
   };
 
-componentWillMount = () => {
+  componentWillMount = () => {
     this.selectedCheckboxes = new Set();
-    this.getDataAxios();
   };
 
   componentDidMount() {
+    this.getDataAxios();
     this.showCurrentLocation();
   }
 
-
-  async getDataAxios(){
-    const response =
-      await axios.get("http://localhost:8010/api/v1/shops/");
-    this.state.shops = response.data;
-
-    this.state.shops.shops.map(shop => (
-        console.log(shop.loc.lat)
-    ))
-}
-
+  async getDataAxios() {
+    const response = await axios.get("http://ec2-18-130-190-158.eu-west-2.compute.amazonaws.com:8010/api/v1/shops/");
+    this.setState({ shops: response.data });
+  }
 
   toggleCheckbox = label => {
     if (this.selectedCheckboxes.has(label)) {
@@ -88,15 +80,15 @@ componentWillMount = () => {
   render() {
     return (
       <div>
-        <Grid container spacing={12} style={{ width: "100vw", height: "50vw" }}>
-          <Grid item xs={8}>
+        <Grid container spacing={10} style={{ width: "100vw", height: "50vw" }}>
+          <Grid item xs={4}>
             <MapWithAMarker
               isMarkerShown={this.state.isMarkerShown}
               currentLocation={this.state.currentLatLng}
               shops={this.state.shops}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <div className="container" position="absolute">
               <div className="row">
                 <div className="col-sm-12">
@@ -126,6 +118,8 @@ componentWillMount = () => {
               </div>
             </div>
           </Grid>
+
+
         </Grid>
       </div>
     );
