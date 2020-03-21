@@ -1,28 +1,51 @@
 import React from "react";
-import {GoogleMap, withScriptjs, withGoogleMap, Marker} from "react-google-maps";
 
-function Map(){
+import MapWithAMarker from './MapWithAMarker';
 
+ export class App extends React.Component {
+    constructor(props) {
+      super(props)
+      this.state = {
+        currentLatLng: {
+          lat: 0,
+          lng: 0
+        },
+        isMarkerShown: false
+      }
+    }
+  
+    showCurrentLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            console.log(position.coords);
+            this.setState(prevState => ({
+              currentLatLng: {
+                ...prevState.currentLatLng,
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+              },
+              isMarkerShown: true
+            }))
+          }
+        )
+      } 
+    }
+  
+  
+    componentDidMount() {
+      this.showCurrentLocation()
+    }
+  
+    render() {
+      return (
+        <div style = {{width: "70vw", height: "100vh"}}>
+          <MapWithAMarker
+            isMarkerShown={this.state.isMarkerShown}
+            currentLocation={this.state.currentLatLng} />
+        </div>
+      );
+    }
+  };
 
-    return(
-        <GoogleMap 
-        defaultZoom={10} 
-        default center={{lat: 12, lng: 12}}
-        />
-    );
-}
-
-const WrappedMap = withScriptjs(withGoogleMap(Map));
-
-export default function App(){
-    return (
-    <div style = {{width: "100vw", height: "100vh"}}>
-        <WrappedMap 
-        googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyBrh4Eg_knGfWdlbpF8q4Dr4Poca3E2WPw`}
-        loadingElement= {<div style= {{height:"100%"}} />}
-        containerElement= {<div style= {{height:"100%"}} />}
-        mapElement= {<div style= {{height:"100%"}} />}
-    />
-    </div>
-    )
-}
+  export default App;
