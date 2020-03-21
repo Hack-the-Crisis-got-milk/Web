@@ -17,7 +17,8 @@ export class App extends React.Component {
         lng: 0
       },
       isMarkerShown: false,
-      shops: []
+      shops: [],
+      item_groups: []
     };
   }
 
@@ -43,6 +44,7 @@ export class App extends React.Component {
 
   componentDidMount() {
     this.getDataAxios();
+    this.getItemGroupsAxios();
     this.showCurrentLocation();
   }
 
@@ -51,6 +53,16 @@ export class App extends React.Component {
       "http://ec2-18-130-190-158.eu-west-2.compute.amazonaws.com:8010/api/v1/shops/"
     );
     this.setState({ shops: response.data });
+  }
+
+  async getItemGroupsAxios(){
+    const response = await axios.get(
+      "http://ec2-18-130-190-158.eu-west-2.compute.amazonaws.com:8010/api/v1/itemgroups/"
+    );
+    this.setState({ item_groups: response.data.item_groups });
+    this.state.item_groups.map(item => (
+      console.log(item.name)
+    ));
   }
 
   toggleCheckbox = label => {
@@ -71,13 +83,13 @@ export class App extends React.Component {
 
   createCheckbox = label => (
     <Checkbox
-      label={label}
+      label={label.name}
       handleCheckboxChange={this.toggleCheckbox}
-      key={label}
+      key={label.name}
     />
   );
 
-  createCheckboxes = () => items.map(this.createCheckbox);
+  createCheckboxes = () => this.state.item_groups.map(this.createCheckbox);
 
   render() {
     return (
@@ -106,9 +118,9 @@ export class App extends React.Component {
                     </form>
                   </div>
 
-                  <div style={{ paddingTop: "50%" }}>
+                  <div style={{ paddingTop: "10%" }}>
                     <h1>Search</h1>
-
+                    
                     <form onSubmit={this.handleFormSubmit}>
                       {this.createCheckboxes()}
                       <button className="btn btn-default" type="submit">
