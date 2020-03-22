@@ -6,6 +6,7 @@ import {
   GoogleMap,
   Marker
 } from "react-google-maps";
+import Modal from 'react-modal';
 
 //const [selectedShop, setSelectedShop] = React.useState(1);
 
@@ -24,15 +25,30 @@ const MapWithAMarker = compose(
     defaultZoom={13}
     center={{ lat: props.currentLocation.lat, lng: props.currentLocation.lng }}
   >
-    {props.shops.shops.map(shop => (
+    {props.shops.shops != null ?
+    props.shops.shops.map(shop => (
       <Marker
         position={{
           lat: shop.loc.lat,
           lng: shop.loc.lng
         }}
+        onClick={{
+        
+        }}
       />
-    ))}
+    )) : console.log("map unavailable") } 
+
+    
   </GoogleMap>
-));
+  
+
+  )
+  
+  
+  
+  );
+
+ 
+
 
 export default MapWithAMarker;

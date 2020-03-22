@@ -5,7 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import axios from "axios";
 import Typography from "@material-ui/core/Typography";
 import ButtonBase from "@material-ui/core/ButtonBase";
-
+import Modal from "react-modal";
 const items = ["Milk", "Bread", "Water"];
 
 export class App extends React.Component {
@@ -18,9 +18,22 @@ export class App extends React.Component {
       },
       isMarkerShown: false,
       shops: [],
-      item_groups: []
-    };
+      item_groups: [],
+      modalIsOpen: false,
+      setIsOpen: false,
+      
+    }
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
+
+  openModal = () => {
+    this.setState({ setIsOpen: true });
+  };
+
+  closeModal = () => {
+    this.setState({ modalIsOpen: false });
+  };
 
   showCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -50,19 +63,17 @@ export class App extends React.Component {
 
   async getDataAxios() {
     const response = await axios.get(
-      "http://ec2-18-130-190-158.eu-west-2.compute.amazonaws.com:8010/api/v1/shops"
+      "http://ec2-18-130-190-158.eu-west-2.compute.amazonaws.com:8010/api/v1/shops/nearby?lat=54.897348&lng=23.895889&radius=1500"
     );
     this.setState({ shops: response.data });
   }
 
-  async getItemGroupsAxios(){
+  async getItemGroupsAxios() {
     const response = await axios.get(
       "http://ec2-18-130-190-158.eu-west-2.compute.amazonaws.com:8010/api/v1/itemgroups/"
     );
     this.setState({ item_groups: response.data.item_groups });
-    this.state.item_groups.map(item => (
-      console.log(item.name)
-    ));
+    this.state.item_groups.map(item => console.log(item.name));
   }
 
   toggleCheckbox = label => {
@@ -100,6 +111,7 @@ export class App extends React.Component {
               isMarkerShown={this.state.isMarkerShown}
               currentLocation={this.state.currentLatLng}
               shops={this.state.shops}
+              toggle={this.openModal}
             />
           </Grid>
           <Grid item xs={3}>
@@ -120,7 +132,7 @@ export class App extends React.Component {
 
                   <div style={{ paddingTop: "10%" }}>
                     <h1>Search</h1>
-                    
+
                     <form onSubmit={this.handleFormSubmit}>
                       {this.createCheckboxes()}
                       <button className="btn btn-default" type="submit">
@@ -141,10 +153,11 @@ export class App extends React.Component {
                         <ul className="list-group">
                           <li className="list-group-item list-group-item-primary">
                             <Grid item>
-                              <ButtonBase >
+                              <ButtonBase>
                                 <img
                                   alt="complex"
                                   src={shop.photo}
+                                  style={{ maxHeight: 200, maxWidth: 400 }}
                                 />
                               </ButtonBase>
                             </Grid>
@@ -155,12 +168,9 @@ export class App extends React.Component {
                               <Typography variant="body2" gutterBottom>
                                 {shop.address}
                               </Typography>
-                              <Typography variant="body2" >
+                              <Typography variant="body2">
                                 Currently:{" "}
-                                <b>
-                                  {shop.open_now ? "Open" : "Closed"}
-                                </b>{" "}
-                                .
+                                <b>{shop.open_now ? "Open" : "Closed"}</b> .
                               </Typography>
                             </Grid>
                           </li>
@@ -172,6 +182,24 @@ export class App extends React.Component {
             </div>
           </Grid>
         </Grid>
+        <div>
+          <button>Open Modal</button>
+          <Modal
+            isOpen={this.state.modalIsOpen}
+            contentLabel="Example Modal"
+            onRequestClose={this.state.closeModal}
+          >
+            <h2>Rimi</h2>
+            <Typography gutterBottom variant="subtitle1">
+              Milk
+            </Typography>
+            <Typography gutterBottom variant="subtitle1">
+              Available
+            </Typography>
+
+            <button onclick={this.closeModal}>close</button>
+          </Modal>
+        </div>
       </div>
     );
   }
