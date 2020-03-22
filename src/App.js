@@ -104,8 +104,8 @@ export class App extends React.Component {
 
   render() {
     return (
-      <div style={{ maxWidth: "100vw", maxHeight: "100vw" }}>
-        <Grid container spacing={3} style={{ width: "100vw", height: "50vw" }}>
+      <div style={{ maxWidth: "100vw", maxHeight: "100vw",}}>
+        <Grid container spacing={3} style={{ width: "100vw", height: "50vw" }} >
           <Grid item xs={6}>
             <MapWithAMarker
               isMarkerShown={this.state.isMarkerShown}
@@ -144,7 +144,7 @@ export class App extends React.Component {
               </div>
             </div>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} style={{overflow:"scroll", height: "1080px"}}>
             <div>
               <b>
                 {this.state.shops.shops != null
